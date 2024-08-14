@@ -22,11 +22,16 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+<<<<<<< HEAD
     'rest_framework',
     'rest_framework_simplejwt',
     'django_filters',
     'users.apps.UsersConfig',
     'api.apps.ApiConfig'
+=======
+    'reviews.apps.ReviewsConfig',
+    'api.apps.ApiConfig',
+>>>>>>> 4980483 (готовы необходимые модели для начала работы)
 ]
 
 MIDDLEWARE = [
@@ -91,7 +96,11 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Internationalization
 
+<<<<<<< HEAD
 LANGUAGE_CODE = 'ru-RU'
+=======
+LANGUAGE_CODE = 'ru'
+>>>>>>> 4980483 (готовы необходимые модели для начала работы)
 
 TIME_ZONE = 'Asia/Yekaterinburg'
 
@@ -108,6 +117,7 @@ STATIC_URL = '/static/'
 
 STATICFILES_DIRS = ((BASE_DIR / 'static/'),)
 
+<<<<<<< HEAD
 
 # Замена модели пользователя
 
@@ -151,3 +161,9 @@ USER_ROLE = (
 )
 
 NO_USERNAMES = ['Me', 'me', 'mE', 'ME']
+=======
+# Константы проекта
+LIMIT_SLUG = 50
+LIMIT_NAME_TEXT = 256
+MIN_VALUE = 1
+>>>>>>> 4980483 (готовы необходимые модели для начала работы)

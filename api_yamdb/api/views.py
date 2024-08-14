@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404
@@ -110,3 +111,8 @@ class UserTokenViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
             return Response(message, status=status.HTTP_400_BAD_REQUEST)
         message = {'token': str(AccessToken.for_user(user))}
         return Response(message, status=status.HTTP_200_OK)
+=======
+from django.shortcuts import render
+
+# Create your views here.
+>>>>>>> 4980483 (готовы необходимые модели для начала работы)
