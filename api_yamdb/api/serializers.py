@@ -52,16 +52,25 @@ class TitlePostSerialzier(serializers.ModelSerializer):
     rating = serializers.IntegerField(required=False)
 
     class Meta:
-        model = Title
-        fields = ('id', 'name', 'year', 'rating',
-                  'description', 'genre', 'category')
+        model = Review
+        fields = ['id', 'text', 'author', 'score', 'pubdate']
 
-    def validate_year(self, value):
-        if (value > dt.date.today().year):
-            raise serializers.ValidationError(
-                'А вы оказывается из будущего'
-            )
-        return value
+    def validate(self, data):
+        request = self.context.get('request')
+        if request.method == 'POST':
+            author = request.user
+            title_id = self.context.get('view', {}).kwargs.get('title_id')
+            if Review.objects.filter(author=author,
+                                     title_id=title_id).exists():
+                raise serializers.ValidationError(
+                    'Вы уже оставляли рецензию'
+                )
+            return data
 
-    def to_representation(self, instance):
-        return TitleSerializer(instance).data
+
+class CommentSerializer(serializers.ModelSerializer):
+    author = SlugRelatedField(slug_field='username', read_only=True)
+
+    class Meta:
+        model = Comments
+        fields = '__all__'
