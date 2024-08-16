@@ -84,6 +84,11 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 5,
+}
+
 
 # Internationalization
 
@@ -108,3 +113,4 @@ STATICFILES_DIRS = ((BASE_DIR / 'static/'),)
 LIMIT_SLUG = 50
 LIMIT_NAME_TEXT = 256
 MIN_VALUE = 1
+MAX_SCOPE_VALUE = 10
