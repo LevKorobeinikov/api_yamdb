@@ -3,8 +3,9 @@ from django.contrib.auth import get_user_model
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 
-from .constants import COD_MAX_LENGTH, EMAIL_MAX_LENGTH, USERNAME_MAX_LENGTH
-from .models import ProjectUser
+from api_yamdb.settings import (COD_MAX_LENGTH, EMAIL_MAX_LENGTH,
+                                NO_USERNAMES, USERNAME_MAX_LENGTH)
+from users.models import ProjectUser
 
 
 User = get_user_model()
@@ -42,7 +43,7 @@ class UserCreateSerializer(serializers.Serializer):
     )
 
     def validate_username(self, value):
-        if value == 'me':
+        if value in NO_USERNAMES:
             raise serializers.ValidationError(
                 'Использовать имя me в качестве username запрещено'
             )
