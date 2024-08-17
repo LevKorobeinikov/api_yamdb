@@ -1,16 +1,20 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
-from .constants import (ADMIN, EMAIL_MAX_LENGTH, FIRST_NAME_MAX_LENGTH,
-                        LAST_NAME_MAX_LENGTH, MODERATOR, ROLE_MAX_LENGTH,
-                        USER, USER_ROLE, USERNAME_MAX_LENGTH)
+from api_yamdb.settings import (ADMIN, EMAIL_MAX_LENGTH,
+                                FIRST_NAME_MAX_LENGTH, LAST_NAME_MAX_LENGTH,
+                                LIMIT_TEXT, MODERATOR, ROLE_MAX_LENGTH, USER,
+                                USER_ROLE, USERNAME_MAX_LENGTH)
+
+from .validators import validate_username
 
 
 class ProjectUser(AbstractUser):
     username = models.CharField(
         verbose_name='Ник пользователя',
         max_length=USERNAME_MAX_LENGTH,
-        unique=True
+        unique=True,
+        validators=[validate_username]
     )
     email = models.EmailField(
         verbose_name='Электронная почта',
@@ -38,20 +42,9 @@ class ProjectUser(AbstractUser):
         max_length=ROLE_MAX_LENGTH
     )
 
-    class Meta:
-        verbose_name = 'Пользователь'
-        verbose_name_plural = 'Пользователи'
-        ordering = ('username',)
-        models.UniqueConstraint(
-            fields=['username', 'email'], name='unique_username_email'
-        )
-
-    def __str__(self):
-        return self.username
-
     @property
     def is_admin(self):
-        return self.role == ADMIN
+        return self.role == ADMIN or self.is_superuser
 
     @property
     def is_moderator(self):
@@ -60,3 +53,14 @@ class ProjectUser(AbstractUser):
     @property
     def is_user(self):
         return self.role == USER
+
+    class Meta:
+        verbose_name = 'Пользователь'
+        verbose_name_plural = 'Пользователи'
+        ordering = ('id',)
+        models.UniqueConstraint(
+            fields=['username', 'email'], name='unique_username_email'
+        )
+
+    def __str__(self):
+        return self.username[:LIMIT_TEXT]

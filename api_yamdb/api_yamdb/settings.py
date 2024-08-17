@@ -115,7 +115,7 @@ AUTH_USER_MODEL = 'users.ProjectUser'
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
+        'rest_framework.permissions.AllowAny',
     ],
 
     'DEFAULT_AUTHENTICATION_CLASSES': [
@@ -132,3 +132,22 @@ SIMPLE_JWT = {
 
 EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
 EMAIL_FILE_PATH = BASE_DIR / 'sent_emails'
+
+USERNAME_MAX_LENGTH = 150
+EMAIL_MAX_LENGTH = 254
+FIRST_NAME_MAX_LENGTH = 150
+LAST_NAME_MAX_LENGTH = 150
+ROLE_MAX_LENGTH = 50
+COD_MAX_LENGTH = 254
+LIMIT_TEXT = 20
+
+USER = 'user'
+ADMIN = 'admin'
+MODERATOR = 'moderator'
+USER_ROLE = (
+    (USER, 'user'),
+    (ADMIN, 'admin'),
+    (MODERATOR, 'moderator'),
+)
+
+NO_USERNAMES = ['Me', 'me', 'mE', 'ME']
