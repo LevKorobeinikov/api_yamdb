@@ -8,8 +8,8 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import AccessToken
 
-from .API.permissions import IsAdminOrSuperUserOrReadOnly
-from .API.serializers import (
+from .permissions import IsAdminOrSuperUserOrReadOnly
+from .serializers import (
     UserSerializer, UserCreateSerializer, UserTokenSerializer
 )
 

@@ -26,6 +26,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'django_filters',
     'users.apps.UsersConfig',
+    'api.apps.ApiConfig'
 ]
 
 MIDDLEWARE = [
@@ -139,7 +140,6 @@ FIRST_NAME_MAX_LENGTH = 150
 LAST_NAME_MAX_LENGTH = 150
 ROLE_MAX_LENGTH = 50
 COD_MAX_LENGTH = 254
-LIMIT_TEXT = 20
 
 USER = 'user'
 ADMIN = 'admin'
