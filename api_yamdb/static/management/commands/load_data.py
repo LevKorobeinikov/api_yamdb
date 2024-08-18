@@ -1,11 +1,11 @@
 import os
 import csv
 from django.core.management.base import BaseCommand
-from reviews.models import Category, Comment, Genre, GenreTitle, Review, Title, User
+from reviews.models import (
+    Category, GenreTitle, Comment, Genre, Review, Title, User)
 
 
 class Command(BaseCommand):
-    help = 'Load data from CSV files into the database'
 
     def handle(self, *args, **kwargs):
         data_dir = os.path.join('static', 'data')

@@ -61,3 +61,27 @@ class Title(models.Model):
         verbose_name_plural = 'Произведения'
         ordering = ('name',)
         default_related_name = "titles"
+
+
+class GenreTitle(models.Model):
+
+    genre = models.ForeignKey(
+        Genre,
+        on_delete=models.SET_NULL,
+        null=True,
+    )
+    title = models.ForeignKey(
+        Title,
+        on_delete=models.CASCADE,
+    )
+
+    class Meta:
+        constraints = (
+            models.UniqueConstraint(
+                fields=('genre', 'title'),
+                name='unique_genre_title',
+            ),
+        )
+
+    def __str__(self):
+        return f'{self.title} {self.genre}'
