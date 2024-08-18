@@ -3,8 +3,8 @@ from django.db import models
 
 from api_yamdb.settings import (ADMIN, EMAIL_MAX_LENGTH,
                                 FIRST_NAME_MAX_LENGTH, LAST_NAME_MAX_LENGTH,
-                                LIMIT_TEXT, MODERATOR, ROLE_MAX_LENGTH, USER,
-                                USER_ROLE, USERNAME_MAX_LENGTH)
+                                MODERATOR, ROLE_MAX_LENGTH, USER, USER_ROLE,
+                                USERNAME_MAX_LENGTH)
 
 from .validators import validate_username
 
@@ -58,9 +58,11 @@ class ProjectUser(AbstractUser):
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
         ordering = ('id',)
-        models.UniqueConstraint(
-            fields=['username', 'email'], name='unique_username_email'
-        )
+        constraints = [
+            models.UniqueConstraint(
+                fields=['username', 'email'], name='unique_username_email'
+            )
+        ]
 
     def __str__(self):
-        return self.username[:LIMIT_TEXT]
+        return self.username
