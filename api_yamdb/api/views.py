@@ -1,4 +1,3 @@
-from django.contrib.auth import get_user_model
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404
@@ -8,21 +7,25 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import AccessToken
 
-from .permissions import IsAdminOrSuperUserOrReadOnly
+from users.models import ProjectUser
+from .permissions import IsAdmin, IsAdminOrReadOnly
 from .serializers import (
     UserSerializer, UserCreateSerializer, UserTokenSerializer
 )
 
 
-User = get_user_model()
+class AdministratorViewSet(mixins.CreateModelMixin, mixins.ListModelMixin,
+                           mixins.DestroyModelMixin, viewsets.GenericViewSet):
+    permission_classes = (IsAdminOrReadOnly,)
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ('name',)
+    lookup_field = 'slug'
 
 
-class UserViewSet(mixins.CreateModelMixin,
-                  mixins.ListModelMixin,
-                  viewsets.GenericViewSet):
-    queryset = User.objects.all()
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = ProjectUser.objects.all()
     serializer_class = UserSerializer
-    permission_classes = [IsAdminOrSuperUserOrReadOnly]
+    permission_classes = [IsAdmin]
     filter_backends = (filters.SearchFilter,)
     search_fields = ('username',)
 
@@ -32,7 +35,7 @@ class UserViewSet(mixins.CreateModelMixin,
         url_path=r'(?P<username>[\w.@+-]+\Z)',
     )
     def get_user_by_username(self, request, username):
-        user = get_object_or_404(User, username=username)
+        user = get_object_or_404(ProjectUser, username=username)
         if request.method == 'PATCH':
             serializer = UserSerializer(user, data=request.data, partial=True)
             serializer.is_valid()
@@ -64,7 +67,7 @@ class UserViewSet(mixins.CreateModelMixin,
 
 
 class UserCreateViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
-    queryset = User.objects.all()
+    queryset = ProjectUser.objects.all()
     serializer_class = UserCreateSerializer
     permissions_classes = [permissions.AllowAny]
 
@@ -72,10 +75,10 @@ class UserCreateViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
         serializer = UserCreateSerializer(data=request.data)
         username = request.data.get('username')
         email = request.data.get('email')
-        if serializer.is_valid() or User.objects.filter(
+        if serializer.is_valid() or ProjectUser.objects.filter(
             usrname=username, email=email
         ).exists():
-            user, __ = User.objects.get_or_create(
+            user, __ = ProjectUser.objects.get_or_create(
                 username=username, email=email
             )
             confirmation_code = default_token_generator.make_token(user)
@@ -92,7 +95,7 @@ class UserCreateViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
 
 
 class UserTokenViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
-    queryset = User.objects.all()
+    queryset = ProjectUser.objects.all()
     serializer_class = UserTokenSerializer
     permission_classes = [permissions.AllowAny]
 
@@ -101,7 +104,7 @@ class UserTokenViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
         serializer.is_valid()
         username = serializer.validated_data.get('username')
         confirmation_code = serializer.validated_data.get('confirmation_data')
-        user = get_object_or_404(User, username=username)
+        user = get_object_or_404(ProjectUser, username=username)
         if not default_token_generator.check_token(user, confirmation_code):
             message = {'confirmation_code': 'Код подтверждения неверный'}
             return Response(message, status=status.HTTP_400_BAD_REQUEST)
