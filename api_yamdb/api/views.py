@@ -8,13 +8,13 @@ from .serializers import (
     TitleSerializer, TitlePostSerialzier)
 
 
-class CategoryViewSet(None):  # AdminViewSet
+class CategoryViewSet(AdministratorViewSet): 
     """Вьюсет для модели Category."""
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
 
 
-class GenreViewSet(None):  # AdminViewSet
+class GenreViewSet(AdministratorViewSet):
     """Вьюсет для модели Genre."""
     queryset = Genre.objects.all()
     serializer_class = GenreSerializer
@@ -25,7 +25,7 @@ class TitleViewSet(viewsets.ModelViewSet):
     queryset = Title.objects.annotate(
         rating=Avg('reviews__score'))
     serializer_class = TitleSerializer
-    permission_classes = (None)  # IsAdminOrReadOnly,
+    permission_classes = (IsAdminOrReadOnly,)
     filterset_class = TitleFilter
     filterset_fields = ('name',)
     ordering = ('name',)
