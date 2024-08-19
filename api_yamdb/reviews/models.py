@@ -1,11 +1,9 @@
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.conf import settings
-from django.contrib.auth import get_user_model  # TODO
 
+from users.models import ProjectUser
 from reviews.utilites import current_year
-
-User = get_user_model()  # TODO
 
 
 class AbstractModelCategoryGenre(models.Model):
@@ -23,8 +21,8 @@ class AbstractModelCategoryGenre(models.Model):
 
 class AbstractModelReviewComment(models.Model):
     text = models.TextField('Текст отзыва')
-    author = models.ForeignKey(  # TODO
-        User, on_delete=models.CASCADE,
+    author = models.ForeignKey(
+        ProjectUser, on_delete=models.CASCADE,
         verbose_name='Aвтор')
     pub_date = models.DateTimeField('Дата публикации', auto_now_add=True)
 
