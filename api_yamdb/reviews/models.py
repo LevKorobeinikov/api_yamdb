@@ -21,6 +21,21 @@ class AbstractModelCategoryGenre(models.Model):
         return self.name
 
 
+class AbstractModelReviewComment(models.Model):
+    text = models.TextField('Текст отзыва')
+    author = models.ForeignKey(  # TODO
+        User, on_delete=models.CASCADE,
+        verbose_name='Aвтор')
+    pub_date = models.DateTimeField('Дата публикации', auto_now_add=True)
+
+    class Meta:
+        abstract = True
+        ordering = ('-pub_date',)
+
+    def __str__(self):
+        return self.text[:settings.MAX_LEN_TEXT]
+
+
 class Category(AbstractModelCategoryGenre):
     class Meta(AbstractModelCategoryGenre.Meta):
         verbose_name = 'Категория'
@@ -67,19 +82,28 @@ class Title(models.Model):
         default_related_name = 'titles'
 
 
-class AbstractModelReviewComment(models.Model):
-    text = models.TextField('Текст отзыва')
-    author = models.ForeignKey(  # TODO
-        User, on_delete=models.CASCADE,
-        verbose_name='Aвтор')
-    pub_date = models.DateTimeField('Дата публикации', auto_now_add=True)
+class GenreTitle(models.Model):
+
+    genre = models.ForeignKey(
+        Genre,
+        on_delete=models.SET_NULL,
+        null=True,
+    )
+    title = models.ForeignKey(
+        Title,
+        on_delete=models.CASCADE,
+    )
 
     class Meta:
-        abstract = True
-        ordering = ('-pub_date',)
+        constraints = (
+            models.UniqueConstraint(
+                fields=('genre', 'title'),
+                name='unique_genre_title',
+            ),
+        )
 
     def __str__(self):
-        return self.text[:settings.MAX_LEN_TEXT]
+        return f'{self.title} {self.genre}'
 
 
 class Review(AbstractModelReviewComment):
@@ -109,27 +133,3 @@ class Comment(AbstractModelReviewComment):
         verbose_name = 'Комментарий'
         verbose_name_plural = 'Комментарии'
         default_related_name = 'comments'
-
-
-class GenreTitle(models.Model):
-
-    genre = models.ForeignKey(
-        Genre,
-        on_delete=models.SET_NULL,
-        null=True,
-    )
-    title = models.ForeignKey(
-        Title,
-        on_delete=models.CASCADE,
-    )
-
-    class Meta:
-        constraints = (
-            models.UniqueConstraint(
-                fields=('genre', 'title'),
-                name='unique_genre_title',
-            ),
-        )
-
-    def __str__(self):
-        return f'{self.title} {self.genre}'

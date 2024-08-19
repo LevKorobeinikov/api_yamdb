@@ -11,7 +11,7 @@ from users.models import ProjectUser
 from .permissions import IsAdmin, IsAdminOrReadOnly
 from django.db.models import Avg
 
-from reviews.models import Category, Genre, Title, Review, Comments
+from reviews.models import Category, Genre, Title, Review
 from .filters import TitleFilter
 from .serializers import (
     CategorySerializer, GenreSerializer,
