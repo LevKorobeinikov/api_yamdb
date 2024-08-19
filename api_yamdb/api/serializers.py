@@ -11,8 +11,6 @@ from api_yamdb.settings import (COD_MAX_LENGTH, EMAIL_MAX_LENGTH,
 from users.models import ProjectUser
 
 
-
-
 class UserSerializer(serializers.ModelSerializer):
     username = serializers.RegexField(
         regex=r'^[\w.@+-]+\Z',
@@ -72,7 +70,6 @@ class UserTokenSerializer(serializers.Serializer):
         max_length=COD_MAX_LENGTH,
         required=True
     )
-
 
 
 class ReviewSerializer(serializers.ModelSerializer):

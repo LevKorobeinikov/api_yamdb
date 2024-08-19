@@ -19,7 +19,6 @@ from .serializers import (
     UserSerializer, UserCreateSerializer, UserTokenSerializer)
 
 
-
 class AdministratorViewSet(mixins.CreateModelMixin, mixins.ListModelMixin,
                            mixins.DestroyModelMixin, viewsets.GenericViewSet):
     permission_classes = (IsAdminOrReadOnly,)
@@ -116,16 +115,6 @@ class UserTokenViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
             return Response(message, status=status.HTTP_400_BAD_REQUEST)
         message = {'token': str(AccessToken.for_user(user))}
         return Response(message, status=status.HTTP_200_OK)
- from django.db.models import Avg
-from rest_framework import filters, mixins, status, viewsets
-
-from reviews.models import Category, Genre, Title, Review, Comments
-from .filters import TitleFilter
-from .serializers import (
-    CategorySerializer, GenreSerializer,
-    TitleSerializer, TitlePostSerialzier, CommentSerializer, ReviewSerializer)
-
-from django.shortcuts import get_object_or_404
 
 
 class CategoryViewSet(AdministratorViewSet):
