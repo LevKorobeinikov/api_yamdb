@@ -26,7 +26,9 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'django_filters',
     'users.apps.UsersConfig',
-    'api.apps.ApiConfig'
+    'reviews.apps.ReviewsConfig',
+    'api.apps.ApiConfig',
+    'django_filters',
 ]
 
 MIDDLEWARE = [
@@ -88,10 +90,15 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 5,
+}
+
 
 # Internationalization
 
-LANGUAGE_CODE = 'ru-RU'
+LANGUAGE_CODE = 'ru'
 
 TIME_ZONE = 'Asia/Yekaterinburg'
 
@@ -117,6 +124,13 @@ AUTH_USER_MODEL = 'users.ProjectUser'
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.AllowAny',
+    ],
+  
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 5,
+    'DEFAULT_FILTER_BACKENDS': [
+        'django_filters.rest_framework.DjangoFilterBackend',
+        'rest_framework.filters.OrderingFilter',
     ],
 
     'DEFAULT_AUTHENTICATION_CLASSES': [
@@ -151,3 +165,18 @@ USER_ROLE = (
 )
 
 NO_USERNAMES = ['Me', 'me', 'mE', 'ME']
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 5,
+    'DEFAULT_FILTER_BACKENDS': [
+        'django_filters.rest_framework.DjangoFilterBackend',
+        'rest_framework.filters.OrderingFilter',
+    ]
+}
+
+
+# Константы проекта
+LIMIT_SLUG = 50
+LIMIT_NAME_TEXT = 256
+MIN_VALUE = 1
+MAX_SCOPE_VALUE = 10
