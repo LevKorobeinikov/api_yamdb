@@ -1,6 +1,7 @@
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404
+from django.db.models import Avg
 
 from rest_framework import filters, mixins, permissions, status, viewsets
 from rest_framework.decorators import action
@@ -10,7 +11,6 @@ from rest_framework_simplejwt.tokens import AccessToken
 from users.models import ProjectUser
 from .permissions import (IsAdmin, IsAdminOrReadOnly,
                           IsAuthorOrAdminOrModeratorOrReadOnly)
-from django.db.models import Avg
 
 from reviews.models import Category, Genre, Title, Review
 from .filters import TitleFilter

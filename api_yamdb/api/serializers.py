@@ -2,12 +2,12 @@ import datetime as dt
 from rest_framework import serializers
 from rest_framework.relations import SlugRelatedField
 from django.core.validators import MinValueValidator, MaxValueValidator
-from django.conf import settings
 from reviews.models import Comment, Review, Category, Genre, Title
 from rest_framework.validators import UniqueValidator
 
 from api_yamdb.settings import (COD_MAX_LENGTH, EMAIL_MAX_LENGTH,
-                                NO_USERNAMES, USERNAME_MAX_LENGTH)
+                                NO_USERNAMES, USERNAME_MAX_LENGTH, MIN_VALUE,
+                                MAX_SCOPE_VALUE)
 from users.models import ProjectUser
 
 
@@ -76,9 +76,9 @@ class ReviewSerializer(serializers.ModelSerializer):
     author = SlugRelatedField(slug_field='username', read_only=True)
     score = serializers.IntegerField(
         validators=[
-            MinValueValidator(limit_value=settings.MIN_VALUE,
+            MinValueValidator(limit_value=MIN_VALUE,
                               message='Минимальная оценка - 1'),
-            MaxValueValidator(limit_value=settings.MAX_SCOPE_VALUE,
+            MaxValueValidator(limit_value=MAX_SCOPE_VALUE,
                               message='Максимальная оценка - 10')]
     )
 
