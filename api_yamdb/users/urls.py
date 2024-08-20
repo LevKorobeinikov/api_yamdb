@@ -6,6 +6,6 @@ from api.views import (
 
 
 urlpatterns = [
-    path('v1/auth/signup/', UserCreateViewSet, name='signup'),
-    path('v1/auth/token/', UserTokenViewSet, name='token')
+    path('signup/', UserCreateViewSet, name='signup'),
+    path('token/', UserTokenViewSet, name='token')
 ]

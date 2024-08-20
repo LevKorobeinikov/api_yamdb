@@ -28,7 +28,7 @@ class AbstractModelReviewComment(models.Model):
 
     class Meta:
         abstract = True
-        ordering = ('-pub_date',)
+        ordering = ('pub_date',)
 
     def __str__(self):
         return self.text[:LIMIT_NAME_TEXT]
