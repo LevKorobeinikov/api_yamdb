@@ -6,6 +6,6 @@ from api.views import (
 
 
 urlpatterns = [
-    path('signup/', UserCreateViewSet, name='signup'),
-    path('token/', UserTokenViewSet, name='token')
+    path('signup/', UserCreateViewSet.as_view(), name='signup'),
+    path('token/', UserTokenViewSet.as_view(), name='token')
 ]
