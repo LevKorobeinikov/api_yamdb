@@ -3,7 +3,7 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 
 from api_yamdb.settings import LIMIT_NAME_TEXT, LIMIT_SLUG, MIN_VALUE
 from users.models import ProjectUser
-from reviews.utilites import current_year
+from .utilites import current_year
 
 
 class AbstractModelCategoryGenre(models.Model):
@@ -62,7 +62,7 @@ class Title(models.Model):
                     message='А вы оказывается из будущего')])
     description = models.TextField('Описание', blank=True)
     genre = models.ManyToManyField(
-        Genre)
+        Genre, through='GenreTitle',)
     category = models.ForeignKey(
         Category,
         on_delete=models.SET_NULL,

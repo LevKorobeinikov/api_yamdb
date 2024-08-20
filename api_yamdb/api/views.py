@@ -18,7 +18,7 @@ from reviews.models import Category, Genre, Title, Review
 from .filters import TitleFilter
 from .serializers import (
     CategorySerializer, GenreSerializer,
-    TitleSerializer, TitlePostSerialzier,
+    TitleSerializer, TitlePostSerializer,
     CommentSerializer, ReviewSerializer,
     UserSerializer, UserCreateSerializer,
     UserTokenSerializer, UsersMeSerializer)
@@ -35,15 +35,15 @@ class AdministratorViewSet(mixins.CreateModelMixin, mixins.ListModelMixin,
 class UserViewSet(viewsets.ModelViewSet):
     queryset = ProjectUser.objects.all()
     serializer_class = UserSerializer
-    permission_classes = [IsAdmin]
+    permission_classes = (IsAdmin,)
     filter_backends = (filters.SearchFilter,)
-    search_fields = ('username',)
+    lookup_field = 'username'
 
     @action(
         detail=False,
         methods=['get', 'patch'],
         url_path='me',
-        permission_classes=[permissions.IsAuthenticated]
+        permission_classes=(permissions.IsAuthenticated,)
     )
     def get_me_data(self, request):
         user = get_object_or_404(ProjectUser, username=self.request.user)
@@ -57,7 +57,7 @@ class UserViewSet(viewsets.ModelViewSet):
 
 
 class UserCreateViewSet(APIView):
-    permissions_classes = [permissions.AllowAny]
+    permission_classes = (permissions.AllowAny,)
 
     def post(self, request):
         serializer = UserCreateSerializer(data=request.data)
@@ -70,7 +70,7 @@ class UserCreateViewSet(APIView):
                 email=email
             )
         except IntegrityError:
-            return Response('Имя/email уже занято',
+            return Response('Имя/email  занято',
                             status.HTTP_400_BAD_REQUEST)
         confirmation_code = default_token_generator.make_token(user)
         send_mail(
@@ -86,7 +86,7 @@ class UserCreateViewSet(APIView):
 class UserTokenViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
     queryset = ProjectUser.objects.all()
     serializer_class = UserTokenSerializer
-    permission_classes = [permissions.AllowAny]
+    permission_classes = (permissions.AllowAny,)
 
     def create(self, request, *args, **kwargs):
         serializer = UserTokenSerializer(data=request.data)
@@ -125,7 +125,7 @@ class TitleViewSet(viewsets.ModelViewSet):
 
     def get_serializer_class(self):
         if self.request.method in ['POST', 'PUT', 'PATCH']:
-            return TitlePostSerialzier
+            return TitlePostSerializer
         return TitleSerializer
 
 
