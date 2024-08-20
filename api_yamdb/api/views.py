@@ -83,7 +83,7 @@ class UserCreateViewSet(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-class UserTokenViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
+class UserTokenViewSet(APIView):
     queryset = ProjectUser.objects.all()
     serializer_class = UserTokenSerializer
     permission_classes = (permissions.AllowAny,)
