@@ -35,12 +35,10 @@ class UserCreateSerializer(serializers.Serializer):
         regex=r'^[\w.@+-]+\Z',
         required=True,
         max_length=USERNAME_MAX_LENGTH,
-        validators=[UniqueValidator(queryset=ProjectUser.objects.all())]
     )
     email = serializers.EmailField(
         required=True,
         max_length=EMAIL_MAX_LENGTH,
-        validators=[UniqueValidator(queryset=ProjectUser.objects.all())]
     )
 
     def validate_username(self, value):
@@ -133,7 +131,7 @@ class TitleSerializer(serializers.ModelSerializer):
     """Сериализатор модели Title."""
     genre = GenreSerializer(many=True)
     category = CategorySerializer()
-    rating = serializers.IntegerField(default=1)
+    rating = serializers.IntegerField(read_only=True)
 
     class Meta:
         model = Title
@@ -145,7 +143,7 @@ class TitleSerializer(serializers.ModelSerializer):
                             )
 
 
-class TitlePostSerialzier(serializers.ModelSerializer):
+class TitlePostSerializer(serializers.ModelSerializer):
     """Cериализатор модели Title для изменения информации
     в ответе (response)."""
     genre = serializers.SlugRelatedField(
