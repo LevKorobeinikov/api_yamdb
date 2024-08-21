@@ -45,17 +45,6 @@ class UserCreateSerializer(serializers.Serializer):
             raise serializers.ValidationError(
                 'Использовать имя me в качестве username запрещено'
             )
-        if ProjectUser.objects.filter(username=value).exists():
-            raise serializers.ValidationError(
-                'Пользователь с данным username уже существует'
-            )
-        return value
-
-    def validate_email(self, value):
-        if ProjectUser.objects.filter(email=value).exists():
-            raise serializers.ValidationError(
-                'Пользователь с данным email уже существует'
-            )
         return value
 
 
