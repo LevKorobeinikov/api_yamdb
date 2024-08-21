@@ -118,8 +118,8 @@ class TitleViewSet(viewsets.ModelViewSet):
         rating=Avg('reviews__score'))
     serializer_class = TitleSerializer
     permission_classes = (IsAdminOrReadOnly,)
-    filterset_class = TitleFilter
     http_method_names = ['get', 'post', 'patch', 'delete']
+    filterset_class = TitleFilter
     filterset_fields = ('name',)
     ordering = ('name',)
 
