@@ -84,6 +84,7 @@ class ReviewSerializer(serializers.ModelSerializer):
                     'Вы уже оставляли рецензию'
                 )
             return data
+        return data
 
     class Meta:
         model = Review
