@@ -89,7 +89,7 @@ class UserTokenViewSet(APIView):
         serializer = UserTokenSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         username = serializer.validated_data.get('username')
-        confirmation_code = serializer.validated_data.get('confirmation_data')
+        confirmation_code = serializer.validated_data.get('confirmation_code')
         user = get_object_or_404(ProjectUser, username=username)
         if not default_token_generator.check_token(user, confirmation_code):
             message = {'confirmation_code': 'Код подтверждения неверный'}
