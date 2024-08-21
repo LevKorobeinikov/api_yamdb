@@ -7,8 +7,8 @@ from django.db.models import Avg
 from rest_framework import filters, mixins, permissions, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_framework_simplejwt.tokens import AccessToken
 from rest_framework.views import APIView
+from rest_framework_simplejwt.tokens import RefreshToken
 
 from users.models import ProjectUser
 from .permissions import (IsAdmin, IsAdminOrReadOnly,
@@ -84,21 +84,19 @@ class UserCreateViewSet(APIView):
 
 
 class UserTokenViewSet(APIView):
-    queryset = ProjectUser.objects.all()
-    serializer_class = UserTokenSerializer
-    permission_classes = (permissions.AllowAny,)
 
-    def create(self, request, *args, **kwargs):
+    def post(self, request):
         serializer = UserTokenSerializer(data=request.data)
-        serializer.is_valid()
+        serializer.is_valid(raise_exception=True)
         username = serializer.validated_data.get('username')
         confirmation_code = serializer.validated_data.get('confirmation_data')
         user = get_object_or_404(ProjectUser, username=username)
         if not default_token_generator.check_token(user, confirmation_code):
             message = {'confirmation_code': 'Код подтверждения неверный'}
             return Response(message, status=status.HTTP_400_BAD_REQUEST)
-        message = {'token': str(AccessToken.for_user(user))}
-        return Response(message, status=status.HTTP_200_OK)
+        token = RefreshToken.for_user(user)
+        return Response({'token': str(token.access_token)},
+                        status=status.HTTP_200_OK)
 
 
 class CategoryViewSet(AdministratorViewSet):
