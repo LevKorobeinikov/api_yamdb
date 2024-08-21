@@ -16,13 +16,13 @@ for filename in os.listdir(csv_directory):
     if filename.endswith('.csv'):
         # Полный путь к CSV-файлу
         file_path = os.path.join(csv_directory, filename)
-        
+
         # Чтение CSV-файла в DataFrame
         df = pd.read_csv(file_path)
-        
-        # Имя таблицы в базе данных с префиксом 'reviews_'
-        table_name = 'reviews_' + os.path.splitext(filename)[0]
-        
+
+        # Имя таблицы в базе данных с префиксом
+        table_name = os.path.splitext(filename)[0]
+
         # Запись данных в таблицу
         df.to_sql(table_name, engine, index=False, if_exists='replace')
 
