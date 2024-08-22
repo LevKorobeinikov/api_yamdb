@@ -1,9 +1,11 @@
 import datetime as dt
+
+from django.core.validators import MinValueValidator, MaxValueValidator
+
 from rest_framework import serializers
 from rest_framework.relations import SlugRelatedField
-from django.core.validators import MinValueValidator, MaxValueValidator
-from reviews.models import Comment, Review, Category, Genre, Title
 
+from reviews.models import Comment, Review, Category, Genre, Title
 from api_yamdb.settings import (COD_MAX_LENGTH, EMAIL_MAX_LENGTH,
                                 NO_USERNAMES, USERNAME_MAX_LENGTH, MIN_VALUE,
                                 MAX_SCOPE_VALUE)

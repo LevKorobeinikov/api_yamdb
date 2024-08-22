@@ -13,7 +13,6 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from users.models import ProjectUser
 from .permissions import (IsAdmin, IsAdminOrReadOnly,
                           IsAuthorOrAdminOrModeratorOrReadOnly)
-
 from reviews.models import Category, Genre, Title, Review
 from .filters import TitleFilter
 from .serializers import (
