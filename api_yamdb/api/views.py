@@ -26,6 +26,7 @@ from .serializers import (
 
 class AdministratorViewSet(mixins.CreateModelMixin, mixins.ListModelMixin,
                            mixins.DestroyModelMixin, viewsets.GenericViewSet):
+    """Вьюсет для операций create/list/retrieve."""
     permission_classes = (IsAdminOrReadOnly,)
     filter_backends = (filters.SearchFilter,)
     search_fields = ('name',)
@@ -33,6 +34,7 @@ class AdministratorViewSet(mixins.CreateModelMixin, mixins.ListModelMixin,
 
 
 class UserViewSet(viewsets.ModelViewSet):
+    """Вьюсет для модели User."""
     queryset = ProjectUser.objects.all()
     serializer_class = UserSerializer
     permission_classes = (IsAdmin,)
@@ -59,6 +61,7 @@ class UserViewSet(viewsets.ModelViewSet):
 
 
 class UserCreateViewSet(APIView):
+    """Вьюсет для регистрации."""
     permission_classes = (permissions.AllowAny,)
 
     def post(self, request):
@@ -86,7 +89,7 @@ class UserCreateViewSet(APIView):
 
 
 class UserTokenViewSet(APIView):
-
+    """Вьюсет для токена."""
     def post(self, request):
         serializer = UserTokenSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)

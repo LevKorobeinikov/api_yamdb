@@ -21,6 +21,7 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class UserCreateSerializer(serializers.Serializer):
+    """Сериализатор для регистрации."""
     username = serializers.RegexField(
         regex=r'^[\w.@+-]+\Z',
         required=True,
@@ -55,6 +56,7 @@ class UserTokenSerializer(serializers.Serializer):
 
 
 class ReviewSerializer(serializers.ModelSerializer):
+    """Сериализатор модели Review."""
     author = SlugRelatedField(slug_field='username', read_only=True)
     score = serializers.IntegerField(
         validators=[
@@ -83,6 +85,7 @@ class ReviewSerializer(serializers.ModelSerializer):
 
 
 class CommentSerializer(serializers.ModelSerializer):
+    """Сериализатор модели Comment."""
     author = SlugRelatedField(slug_field='username', read_only=True)
 
     class Meta:
