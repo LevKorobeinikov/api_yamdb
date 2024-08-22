@@ -54,7 +54,7 @@ class Title(models.Model):
         Category,
         on_delete=models.SET_NULL,
         null=True,
-    )reviews
+    )
 
     def __str__(self):
         return self.name
@@ -75,29 +75,21 @@ class AbstractModelReviewComment(models.Model):
 
     class Meta:
         abstract = True
+        ordering = ('-pub_date',)
 
     def __str__(self):
-        return self.text
+        return self.text[:settings.MAX_LEN_TEXT]
 
 
 class Review(AbstractModelReviewComment):
     title = models.ForeignKey(
-        Title, on_delete=models.CASCADE, verbose_name='Title')
-    score = models.PositiveSmallIntegerField(
-        'Оценка',
-        db_index=True,
-        validators=[MinValueValidator(
-            limit_value=settings.MIN_VALUE,
-            message='Минимальная оценка - 1'),
-            MaxValueValidator(
-            limit_value=settings.MAX_SCOPE_VALUE,
-            message='Максимальная оценка - 10')])
+        Title, on_delete=models.CASCADE, verbose_name='Произведение')
+    score = models.PositiveSmallIntegerField('Оценка', db_index=True,)
 
-    class Meta:
+    class Meta(AbstractModelReviewComment.Meta):
         verbose_name = 'Отзыв'
         verbose_name_plural = 'Отзывы'
         default_related_name = 'reviews'
-        ordering = ('-pub_date',)
         constraints = (
             models.UniqueConstraint(
                 fields=['author', 'title'],
@@ -112,8 +104,7 @@ class Comment(AbstractModelReviewComment):
         verbose_name='Отзыв'
     )
 
-    class Meta:
+    class Meta(AbstractModelReviewComment.Meta):
         verbose_name = 'Комментарий'
         verbose_name_plural = 'Комментарии'
         default_related_name = 'comments'
-        ordering = ('-pub_date',)
