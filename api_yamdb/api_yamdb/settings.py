@@ -93,6 +93,11 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 5,
+}
+
 
 # Internationalization
 
@@ -131,4 +136,4 @@ REST_FRAMEWORK = {
 LIMIT_SLUG = 50
 LIMIT_NAME_TEXT = 256
 MIN_VALUE = 1
->>>>>>> 4980483 (готовы необходимые модели для начала работы)
+MAX_SCOPE_VALUE = 10
