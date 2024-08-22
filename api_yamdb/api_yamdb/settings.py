@@ -31,7 +31,7 @@ INSTALLED_APPS = [
 =======
     'reviews.apps.ReviewsConfig',
     'api.apps.ApiConfig',
->>>>>>> 4980483 (готовы необходимые модели для начала работы)
+    'django_filters',
 ]
 
 MIDDLEWARE = [
@@ -117,51 +117,16 @@ STATIC_URL = '/static/'
 
 STATICFILES_DIRS = ((BASE_DIR / 'static/'),)
 
-<<<<<<< HEAD
-
-# Замена модели пользователя
-
-AUTH_USER_MODEL = 'users.ProjectUser'
-
-
 REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.AllowAny',
-    ],
-
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ],
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 5,
+    'DEFAULT_FILTER_BACKENDS': [
+        'django_filters.rest_framework.DjangoFilterBackend',
+        'rest_framework.filters.OrderingFilter',
+    ]
 }
 
 
-SIMPLE_JWT = {
-    # Устанавливаем срок жизни токена
-    'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
-    'AUTH_HEADER_TYPES': ('Bearer',),
-}
-
-EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
-EMAIL_FILE_PATH = BASE_DIR / 'sent_emails'
-
-USERNAME_MAX_LENGTH = 150
-EMAIL_MAX_LENGTH = 254
-FIRST_NAME_MAX_LENGTH = 150
-LAST_NAME_MAX_LENGTH = 150
-ROLE_MAX_LENGTH = 50
-COD_MAX_LENGTH = 254
-
-USER = 'user'
-ADMIN = 'admin'
-MODERATOR = 'moderator'
-USER_ROLE = (
-    (USER, 'user'),
-    (ADMIN, 'admin'),
-    (MODERATOR, 'moderator'),
-)
-
-NO_USERNAMES = ['Me', 'me', 'mE', 'ME']
-=======
 # Константы проекта
 LIMIT_SLUG = 50
 LIMIT_NAME_TEXT = 256

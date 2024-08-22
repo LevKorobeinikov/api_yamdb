@@ -1,72 +1,67 @@
-from django.contrib.auth import get_user_model
+import datetime as dt
 
 from rest_framework import serializers
-from rest_framework.validators import UniqueValidator
 
-from api_yamdb.settings import (COD_MAX_LENGTH, EMAIL_MAX_LENGTH,
-                                NO_USERNAMES, USERNAME_MAX_LENGTH)
-from users.models import ProjectUser
+from reviews.models import Category, Genre, Title
 
 
-User = get_user_model()
-
-
-class UserSerializer(serializers.ModelSerializer):
-    username = serializers.RegexField(
-        regex=r'^[\w.@+-]+\Z',
-        required=True,
-        max_length=USERNAME_MAX_LENGTH,
-        validators=[UniqueValidator(queryset=User.objects.all())]
-    )
-    email = serializers.EmailField(
-        required=True,
-        max_length=EMAIL_MAX_LENGTH,
-        validators=[UniqueValidator(queryset=User.objects.all())]
-    )
+class CategorySerializer(serializers.ModelSerializer):
+    """Сериализатор модели Category."""
 
     class Meta:
-        model = ProjectUser
-        fields = '__all__'
+        model = Category
+        fields = ('name', 'slug')
 
 
-class UserCreateSerializer(serializers.Serializer):
-    username = serializers.RegexField(
-        regex=r'^[\w.@+-]+\Z',
-        required=True,
-        max_length=USERNAME_MAX_LENGTH,
-        validators=[UniqueValidator(queryset=User.objects.all())]
+class GenreSerializer(serializers.ModelSerializer):
+    """Сериализатор модели Genre."""
+
+    class Meta:
+        model = Genre
+        fields = ('name', 'slug')
+
+
+class TitleSerializer(serializers.ModelSerializer):
+    """Сериализатор модели Title."""
+    genre = GenreSerializer(many=True)
+    category = CategorySerializer()
+    rating = serializers.IntegerField(default=1)
+
+    class Meta:
+        model = Title
+        fields = ('id', 'name', 'year', 'rating',
+                  'description', 'genre', 'category',
+                  )
+        read_only_fields = ('id', 'name', 'year', 'rating',
+                            'description', 'genre', 'category',
+                            )
+
+
+class TitlePostSerialzier(serializers.ModelSerializer):
+    """Cериализатор модели Title для изменения информации
+    в ответе (response)."""
+    genre = serializers.SlugRelatedField(
+        slug_field='slug',
+        queryset=Genre.objects.all(),
+        many=True
     )
-    email = serializers.EmailField(
-        required=True,
-        max_length=EMAIL_MAX_LENGTH,
-        validators=[UniqueValidator(queryset=User.objects.all())]
+    category = serializers.SlugRelatedField(
+        slug_field='slug',
+        queryset=Category.objects.all()
     )
+    rating = serializers.IntegerField(required=False)
 
-    def validate_username(self, value):
-        if value in NO_USERNAMES:
+    class Meta:
+        model = Title
+        fields = ('id', 'name', 'year', 'rating',
+                  'description', 'genre', 'category')
+
+    def validate_year(self, value):
+        if (value > dt.date.today().year):
             raise serializers.ValidationError(
-                'Использовать имя me в качестве username запрещено'
-            )
-        if User.objects.filter(username=value).exists():
-            raise serializers.ValidationError(
-                'Пользователь с данным username уже существует'
+                'А вы оказывается из будущего'
             )
         return value
 
-    def validate_email(self, value):
-        if User.objects.filter(email=value).exists():
-            raise serializers.ValidationError(
-                'Пользователь с данным email уже существует'
-            )
-        return value
-
-
-class UserTokenSerializer(serializers.Serializer):
-    username = serializers.CharField(
-        required=True,
-        max_length=USERNAME_MAX_LENGTH,
-    )
-    confirmation_code = serializers.CharField(
-        max_length=COD_MAX_LENGTH,
-        required=True
-    )
+    def to_representation(self, instance):
+        return TitleSerializer(instance).data
