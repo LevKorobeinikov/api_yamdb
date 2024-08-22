@@ -3,7 +3,6 @@ from rest_framework import serializers
 from rest_framework.relations import SlugRelatedField
 from django.core.validators import MinValueValidator, MaxValueValidator
 from reviews.models import Comment, Review, Category, Genre, Title
-from rest_framework.validators import UniqueValidator
 
 from api_yamdb.settings import (COD_MAX_LENGTH, EMAIL_MAX_LENGTH,
                                 NO_USERNAMES, USERNAME_MAX_LENGTH, MIN_VALUE,
@@ -12,21 +11,12 @@ from users.models import ProjectUser
 
 
 class UserSerializer(serializers.ModelSerializer):
-    username = serializers.RegexField(
-        regex=r'^[\w.@+-]+\Z',
-        required=True,
-        max_length=USERNAME_MAX_LENGTH,
-        validators=[UniqueValidator(queryset=ProjectUser.objects.all())]
-    )
-    email = serializers.EmailField(
-        required=True,
-        max_length=EMAIL_MAX_LENGTH,
-        validators=[UniqueValidator(queryset=ProjectUser.objects.all())]
-    )
-
+    """Сериализатор модели User."""
     class Meta:
         model = ProjectUser
-        fields = '__all__'
+        fields = (
+            'username', 'email', 'first_name', 'last_name', 'bio', 'role'
+        )
 
 
 class UserCreateSerializer(serializers.Serializer):

@@ -39,6 +39,7 @@ class UserViewSet(viewsets.ModelViewSet):
     filter_backends = (filters.SearchFilter,)
     lookup_field = 'username'
     http_method_names = ['get', 'post', 'patch', 'delete']
+    search_fields = ('username',)
 
     @action(
         detail=False,
