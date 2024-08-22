@@ -62,6 +62,10 @@ class UserCreateSerializer(serializers.Serializer):
         return value
 
 
+class UsersMeSerializer(UserSerializer):
+    role = serializers.CharField(read_only=True)
+
+
 class UserTokenSerializer(serializers.Serializer):
     username = serializers.CharField(
         required=True,
