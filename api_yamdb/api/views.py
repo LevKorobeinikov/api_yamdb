@@ -90,6 +90,7 @@ class UserCreateViewSet(APIView):
 
 class UserTokenViewSet(APIView):
     """Вьюсет для токена."""
+
     def post(self, request):
         serializer = UserTokenSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)

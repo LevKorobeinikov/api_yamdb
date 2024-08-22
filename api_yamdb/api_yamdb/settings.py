@@ -17,12 +17,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-<<<<<<< HEAD
     'rest_framework',
     'rest_framework_simplejwt',
     'users.apps.UsersConfig',
-    'api.apps.ApiConfig'
-=======
     'reviews.apps.ReviewsConfig',
     'api.apps.ApiConfig',
     'django_filters',
@@ -82,7 +79,6 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 LANGUAGE_CODE = 'ru'
->>>>>>> 4980483 (готовы необходимые модели для начала работы)
 
 TIME_ZONE = 'Asia/Yekaterinburg'
 
@@ -95,58 +91,6 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = ((BASE_DIR / 'static/'),)
-
-AUTH_USER_MODEL = 'users.ProjectUser'
-
-SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
-    'AUTH_HEADER_TYPES': ('Bearer',),
-    'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
-}
-
-EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
-EMAIL_FILE_PATH = BASE_DIR / 'sent_emails'
-
-REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.AllowAny',
-    ],
-
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 5,
-
-    'DEFAULT_FILTER_BACKENDS': [
-        'django_filters.rest_framework.DjangoFilterBackend',
-        'rest_framework.filters.OrderingFilter',
-    ],
-
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ],
-}
-
-USERNAME_MAX_LENGTH = 150
-EMAIL_MAX_LENGTH = 254
-FIRST_NAME_MAX_LENGTH = 150
-LAST_NAME_MAX_LENGTH = 150
-ROLE_MAX_LENGTH = 50
-COD_MAX_LENGTH = 254
-
-USER = 'user'
-ADMIN = 'admin'
-MODERATOR = 'moderator'
-USER_ROLE = (
-    (USER, 'user'),
-    (ADMIN, 'admin'),
-    (MODERATOR, 'moderator'),
-)
-
-NO_USERNAMES = ['Me', 'me', 'mE', 'ME']
-
-LIMIT_SLUG = 50
-LIMIT_NAME_TEXT = 256
-MIN_VALUE = 1
-MAX_SCOPE_VALUE = 10
 
 AUTH_USER_MODEL = 'users.ProjectUser'
 

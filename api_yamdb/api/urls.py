@@ -1,5 +1,4 @@
 from django.urls import include, path
-from rest_framework import routers
 
 from rest_framework.routers import DefaultRouter
 
@@ -21,5 +20,6 @@ router_v1.register(r'titles/(?P<title_id>\d+)/reviews',
 
 
 urlpatterns = [
-    path('v1/', include(router.urls)),
+    path('v1/', include(router_v1.urls)),
+    path('v1/auth/', include('users.urls')),
 ]
