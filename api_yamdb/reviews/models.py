@@ -1,13 +1,13 @@
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
-from django.conf import settings
 
+from api_yamdb.constants import LIMIT_NAME_TEXT, MIN_VALUE
 from users.models import ProjectUser
 from reviews.utilites import current_year
 
 
 class AbstractModelCategoryGenre(models.Model):
-    name = models.CharField('Имя', max_length=settings.LIMIT_NAME_TEXT)
+    name = models.CharField('Имя', max_length=LIMIT_NAME_TEXT)
     slug = models.SlugField(
         'Slug', unique=True)
 
@@ -31,7 +31,7 @@ class AbstractModelReviewComment(models.Model):
         ordering = ('pub_date',)
 
     def __str__(self):
-        return self.text[:settings.LIMIT_NAME_TEXT]
+        return self.text[:LIMIT_NAME_TEXT]
 
 
 class Category(AbstractModelCategoryGenre):
@@ -48,12 +48,12 @@ class Genre(AbstractModelCategoryGenre):
 
 class Title(models.Model):
     name = models.CharField(
-        'Название произведения', max_length=settings.LIMIT_NAME_TEXT)
+        'Название произведения', max_length=LIMIT_NAME_TEXT)
     year = models.SmallIntegerField(
         'Год выпуска',
         db_index=True,
         validators=[MinValueValidator(
-                    limit_value=settings.MIN_VALUE,
+                    limit_value=MIN_VALUE,
                     message='Нулевой год ставить недопустимо'),
                     MaxValueValidator(
                     limit_value=current_year,
