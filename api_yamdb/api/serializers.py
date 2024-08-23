@@ -123,7 +123,7 @@ class TitleSerializer(serializers.ModelSerializer):
 
     genre = GenreSerializer(many=True)
     category = CategorySerializer()
-    rating = serializers.IntegerField(read_only=True)
+    rating = serializers.IntegerField(default=1, read_only=True)
 
     class Meta:
         model = Title
@@ -138,17 +138,18 @@ class TitleSerializer(serializers.ModelSerializer):
 class TitlePostSerializer(serializers.ModelSerializer):
     """Cериализатор модели Title для изменения информации
     в ответе (response)."""
-    
+
     genre = serializers.SlugRelatedField(
         slug_field='slug',
         queryset=Genre.objects.all(),
-        many=True
+        many=True,
+        allow_empty=False
     )
     category = serializers.SlugRelatedField(
         slug_field='slug',
         queryset=Category.objects.all()
     )
-    rating = serializers.IntegerField(required=False)
+    year = serializers.IntegerField(required=True)
 
     class Meta:
         model = Title
