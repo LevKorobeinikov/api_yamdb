@@ -71,26 +71,50 @@ python manage.py runserver
 /api/v1/auth/signup/
 ```
 Пример запроса:
+<<<<<<< HEAD
+=======
+```
+>>>>>>> 962446c759cfdc0cc7fc86fa9d8ffb9aed4ad72a
 {
   "email": "user@example.com"
   "username": "^w\\Z"
 }
+<<<<<<< HEAD
 Пример ответа:
+=======
+```
+Пример ответа:
+```
+>>>>>>> 962446c759cfdc0cc7fc86fa9d8ffb9aed4ad72a
 {
   "email": "string",
   "username": "string"
 }
+<<<<<<< HEAD
+=======
+```
+>>>>>>> 962446c759cfdc0cc7fc86fa9d8ffb9aed4ad72a
 
 Добавление нового отзыва POST:
 ```
 /api/v1/titles/{title_id}/reviews/
 ```
 Пример запроса:
+<<<<<<< HEAD
+=======
+```
+>>>>>>> 962446c759cfdc0cc7fc86fa9d8ffb9aed4ad72a
 {
   "text": "string",
   "score": integer
 }
+<<<<<<< HEAD
 Пример ответа:
+=======
+```
+Пример ответа:
+```
+>>>>>>> 962446c759cfdc0cc7fc86fa9d8ffb9aed4ad72a
 {
   "id": 0,
   "text": "string",
@@ -98,6 +122,10 @@ python manage.py runserver
   "score": 1,
   "pub_date": "2019-08-24T14:15:22Z"
 }
+<<<<<<< HEAD
+=======
+```
+>>>>>>> 962446c759cfdc0cc7fc86fa9d8ffb9aed4ad72a
 
 
 Добавление комментария к отзыву POST:
@@ -105,16 +133,30 @@ python manage.py runserver
 /api/v1/titles/{title_id}/reviews/{reviews_id}/comments/
 ```
 Пример запроса:
+<<<<<<< HEAD
 {
   "text": "string"
 }
 Пример ответа:
+=======
+```
+{
+  "text": "string"
+}
+```
+Пример ответа:
+```
+>>>>>>> 962446c759cfdc0cc7fc86fa9d8ffb9aed4ad72a
 {
   "id": 0,
   "text": "string",
   "author": "string",
   "pub_date": "2019-08-24T14:15:22Z"
 }
+<<<<<<< HEAD
+=======
+```
+>>>>>>> 962446c759cfdc0cc7fc86fa9d8ffb9aed4ad72a
 
 
 # Используемые технологии:
