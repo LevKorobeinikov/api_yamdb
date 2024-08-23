@@ -1,8 +1,8 @@
 from django.contrib.auth.tokens import default_token_generator
-from django.db import IntegrityError
 from django.core.mail import send_mail
-from django.shortcuts import get_object_or_404
+from django.db import IntegrityError
 from django.db.models import Avg
+from django.shortcuts import get_object_or_404
 
 from rest_framework import filters, mixins, permissions, status, viewsets
 from rest_framework.decorators import action
@@ -11,16 +11,18 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from users.models import ProjectUser
-from .permissions import (IsAdmin, IsAdminOrReadOnly,
-                          IsAuthorOrAdminOrModeratorOrReadOnly)
 from reviews.models import Category, Genre, Title, Review
-from .filters import TitleFilter
-from .serializers import (
+from api.filters import TitleFilter
+from api.permissions import (
+    IsAdmin, IsAdminOrReadOnly, IsAuthorOrAdminOrModeratorOrReadOnly
+)
+from api.serializers import (
     CategorySerializer, GenreSerializer,
     TitleSerializer, TitlePostSerializer,
     CommentSerializer, ReviewSerializer,
     UserSerializer, UserCreateSerializer,
-    UserTokenSerializer, UsersMeSerializer)
+    UserTokenSerializer, UsersMeSerializer
+)
 
 
 class AdministratorViewSet(mixins.CreateModelMixin, mixins.ListModelMixin,
