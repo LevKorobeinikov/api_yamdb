@@ -28,6 +28,7 @@ from api.serializers import (
 class AdministratorViewSet(mixins.CreateModelMixin, mixins.ListModelMixin,
                            mixins.DestroyModelMixin, viewsets.GenericViewSet):
     """Вьюсет для операций create/list/retrieve."""
+    
     permission_classes = (IsAdminOrReadOnly,)
     filter_backends = (filters.SearchFilter,)
     search_fields = ('name',)
@@ -36,6 +37,7 @@ class AdministratorViewSet(mixins.CreateModelMixin, mixins.ListModelMixin,
 
 class UserViewSet(viewsets.ModelViewSet):
     """Вьюсет для модели User."""
+
     queryset = ProjectUser.objects.all()
     serializer_class = UserSerializer
     permission_classes = (IsAdmin,)
@@ -63,6 +65,7 @@ class UserViewSet(viewsets.ModelViewSet):
 
 class UserCreateViewSet(APIView):
     """Вьюсет для регистрации."""
+
     permission_classes = (permissions.AllowAny,)
 
     def post(self, request):
@@ -108,18 +111,21 @@ class UserTokenViewSet(APIView):
 
 class CategoryViewSet(AdministratorViewSet):
     """Вьюсет для модели Category."""
+
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
 
 
 class GenreViewSet(AdministratorViewSet):
     """Вьюсет для модели Genre."""
+
     queryset = Genre.objects.all()
     serializer_class = GenreSerializer
 
 
 class TitleViewSet(viewsets.ModelViewSet):
     """Вьюсет для модели Title."""
+
     queryset = Title.objects.annotate(
         rating=Avg('reviews__score'))
     serializer_class = TitleSerializer
@@ -136,6 +142,8 @@ class TitleViewSet(viewsets.ModelViewSet):
 
 
 class ReviewViewSet(viewsets.ModelViewSet):
+    """Вьюсет для модели Review."""
+
     serializer_class = ReviewSerializer
     permission_classes = (IsAuthorOrAdminOrModeratorOrReadOnly,)
     http_method_names = ['get', 'post', 'patch', 'delete']
@@ -151,6 +159,8 @@ class ReviewViewSet(viewsets.ModelViewSet):
 
 
 class CommentViewSet(viewsets.ModelViewSet):
+    """Вьюсет для модели Comment."""
+
     serializer_class = CommentSerializer
     permission_classes = (IsAuthorOrAdminOrModeratorOrReadOnly,)
     http_method_names = ['get', 'post', 'patch', 'delete']
