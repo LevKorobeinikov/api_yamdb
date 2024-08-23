@@ -78,21 +78,26 @@ python manage.py runserver
 }
 ```
 Пример ответа:
+```
 {
   "email": "string",
   "username": "string"
 }
+```
 
 Добавление нового отзыва POST:
 ```
 /api/v1/titles/{title_id}/reviews/
 ```
 Пример запроса:
+```
 {
   "text": "string",
   "score": integer
 }
+```
 Пример ответа:
+```
 {
   "id": 0,
   "text": "string",
@@ -100,6 +105,7 @@ python manage.py runserver
   "score": 1,
   "pub_date": "2019-08-24T14:15:22Z"
 }
+```
 
 
 Добавление комментария к отзыву POST:
@@ -107,16 +113,20 @@ python manage.py runserver
 /api/v1/titles/{title_id}/reviews/{reviews_id}/comments/
 ```
 Пример запроса:
+```
 {
   "text": "string"
 }
+```
 Пример ответа:
+```
 {
   "id": 0,
   "text": "string",
   "author": "string",
   "pub_date": "2019-08-24T14:15:22Z"
 }
+```
 
 
 # Используемые технологии:
