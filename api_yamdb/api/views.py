@@ -166,7 +166,8 @@ class CommentViewSet(viewsets.ModelViewSet):
     http_method_names = ['get', 'post', 'patch', 'delete']
 
     def get_review(self):
-        return get_object_or_404(Review, id=self.kwargs['review_id'])
+        return get_object_or_404(Review, id=self.kwargs['review_id'],
+                                 title_id=self.kwargs['title_id'])
 
     def get_queryset(self):
         return self.get_review().comments.all()
