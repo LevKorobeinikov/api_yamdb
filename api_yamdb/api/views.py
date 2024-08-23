@@ -28,7 +28,7 @@ from api.serializers import (
 class AdministratorViewSet(mixins.CreateModelMixin, mixins.ListModelMixin,
                            mixins.DestroyModelMixin, viewsets.GenericViewSet):
     """Вьюсет для операций create/list/retrieve."""
-    
+
     permission_classes = (IsAdminOrReadOnly,)
     filter_backends = (filters.SearchFilter,)
     search_fields = ('name',)
