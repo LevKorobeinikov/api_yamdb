@@ -70,34 +70,52 @@ python manage.py runserver
 ```
 /api/v1/auth/signup/
 ```
-Получение списка всех категорий GET:
-```
-/api/v1/categories/
-```
-Получение списка всех жанров GET:
-```
-/api/v1/categories/
-```
-Получение списка всех произведений GET:
-```
-/api/v1/titles/
-```
-Получение списка всех отзывов GET:
-```
-/api/v1/titles/{title_id}/reviews/
-```
+Пример запроса:
+{
+  "email": "user@example.com"
+  "username": "^w\\Z"
+}
+Пример ответа:
+{
+  "email": "string",
+  "username": "string"
+}
+
 Добавление нового отзыва POST:
 ```
 /api/v1/titles/{title_id}/reviews/
 ```
+Пример запроса:
+{
+  "text": "string",
+  "score": integer
+}
+Пример ответа:
+{
+  "id": 0,
+  "text": "string",
+  "author": "string",
+  "score": 1,
+  "pub_date": "2019-08-24T14:15:22Z"
+}
+
+
 Добавление комментария к отзыву POST:
 ```
 /api/v1/titles/{title_id}/reviews/{reviews_id}/comments/
 ```
-Документация:
-```
-/redoc/
-```
+Пример запроса:
+{
+  "text": "string"
+}
+Пример ответа:
+{
+  "id": 0,
+  "text": "string",
+  "author": "string",
+  "pub_date": "2019-08-24T14:15:22Z"
+}
+
 
 # Используемые технологии:
 Python 3.9.13, Django 3.2.16, DjangoRestFramework 3.12.4, simpleJWT 4.7.2
