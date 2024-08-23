@@ -1,19 +1,21 @@
 import datetime as dt
 
-from django.core.validators import MinValueValidator, MaxValueValidator
-
+from django.core.validators import MaxValueValidator, MinValueValidator
 from rest_framework import serializers
 from rest_framework.relations import SlugRelatedField
 
-from reviews.models import Comment, Review, Category, Genre, Title
-from api_yamdb.constants import (COD_MAX_LENGTH, EMAIL_MAX_LENGTH,
-                                 NO_USERNAMES, USERNAME_MAX_LENGTH, MIN_VALUE,
-                                 MAX_SCOPE_VALUE)
+from api_yamdb.constants import (
+    COD_MAX_LENGTH, EMAIL_MAX_LENGTH,
+    MAX_SCOPE_VALUE, MIN_VALUE,
+    NO_USERNAMES, USERNAME_MAX_LENGTH
+)
+from reviews.models import Category, Comment, Genre, Review, Title
 from users.models import ProjectUser
 
 
 class UserSerializer(serializers.ModelSerializer):
     """Сериализатор модели User."""
+
     class Meta:
         model = ProjectUser
         fields = (
@@ -23,6 +25,7 @@ class UserSerializer(serializers.ModelSerializer):
 
 class UserCreateSerializer(serializers.Serializer):
     """Сериализатор для регистрации."""
+
     username = serializers.RegexField(
         regex=r'^[\w.@+-]+\Z',
         required=True,
@@ -46,6 +49,8 @@ class UsersMeSerializer(UserSerializer):
 
 
 class UserTokenSerializer(serializers.Serializer):
+    """Сериализатор для токена."""
+
     username = serializers.CharField(
         required=True,
         max_length=USERNAME_MAX_LENGTH,
@@ -58,6 +63,7 @@ class UserTokenSerializer(serializers.Serializer):
 
 class ReviewSerializer(serializers.ModelSerializer):
     """Сериализатор модели Review."""
+
     author = SlugRelatedField(slug_field='username', read_only=True)
     score = serializers.IntegerField(
         validators=[
@@ -87,6 +93,7 @@ class ReviewSerializer(serializers.ModelSerializer):
 
 class CommentSerializer(serializers.ModelSerializer):
     """Сериализатор модели Comment."""
+
     author = SlugRelatedField(slug_field='username', read_only=True)
 
     class Meta:
@@ -113,6 +120,7 @@ class GenreSerializer(serializers.ModelSerializer):
 
 class TitleSerializer(serializers.ModelSerializer):
     """Сериализатор модели Title."""
+
     genre = GenreSerializer(many=True)
     category = CategorySerializer()
     rating = serializers.IntegerField(read_only=True)
@@ -130,6 +138,7 @@ class TitleSerializer(serializers.ModelSerializer):
 class TitlePostSerializer(serializers.ModelSerializer):
     """Cериализатор модели Title для изменения информации
     в ответе (response)."""
+    
     genre = serializers.SlugRelatedField(
         slug_field='slug',
         queryset=Genre.objects.all(),
