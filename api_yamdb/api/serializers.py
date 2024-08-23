@@ -1,11 +1,17 @@
 import datetime as dt
 
+from django.conf import settings
+from django.contrib.auth.tokens import default_token_generator
+from django.core.mail import send_mail
 from django.core.validators import MaxValueValidator, MinValueValidator
+from django.db.utils import IntegrityError
+from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 from rest_framework.relations import SlugRelatedField
+from rest_framework_simplejwt.tokens import RefreshToken
 
 from api_yamdb.constants import (
-    COD_MAX_LENGTH, EMAIL_MAX_LENGTH,
+    CHECK_USERNAME, COD_MAX_LENGTH, EMAIL_MAX_LENGTH,
     MAX_SCOPE_VALUE, MIN_VALUE,
     NO_USERNAMES, USERNAME_MAX_LENGTH
 )
@@ -27,7 +33,7 @@ class UserCreateSerializer(serializers.Serializer):
     """Сериализатор для регистрации."""
 
     username = serializers.RegexField(
-        regex=r'^[\w.@+-]+\Z',
+        regex=CHECK_USERNAME,
         required=True,
         max_length=USERNAME_MAX_LENGTH,
     )
@@ -36,16 +42,48 @@ class UserCreateSerializer(serializers.Serializer):
         max_length=EMAIL_MAX_LENGTH,
     )
 
+    class Meta:
+        model = ProjectUser
+        fields = ('username', 'email',)
+
     def validate_username(self, value):
         if value in NO_USERNAMES:
             raise serializers.ValidationError(
-                'Использовать имя me в качестве username запрещено'
+                'Использовать имя {value} в качестве username запрещено'
             )
         return value
 
-
-class UsersMeSerializer(UserSerializer):
-    role = serializers.CharField(read_only=True)
+    def create(self, validated_data):
+        username = validated_data['username']
+        email = validated_data['email']
+        try:
+            user, _ = ProjectUser.objects.get_or_create(
+                username=username,
+                email=email
+            )
+        except IntegrityError:
+            if (ProjectUser.objects.filter(username=username).exists()
+                    and not ProjectUser.objects.filter(email=email).exists()):
+                raise serializers.ValidationError(
+                    f'Пользователь со значением username = {username}'
+                    'уже существует'
+                )
+            if (ProjectUser.objects.filter(email=email).exists()
+                    and not ProjectUser.objects.filter(username=username)
+                    .exists()):
+                raise serializers.ValidationError(
+                    f'Пользователь со значением email = {email}'
+                    'уже существует'
+                )
+        confirmation_code = default_token_generator.make_token(user)
+        send_mail(
+            subject='Код подтверждения',
+            message=f'Код подтверждения: {confirmation_code}',
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=(email,),
+            fail_silently=True,
+        )
+        return user
 
 
 class UserTokenSerializer(serializers.Serializer):
@@ -57,8 +95,29 @@ class UserTokenSerializer(serializers.Serializer):
     )
     confirmation_code = serializers.CharField(
         max_length=COD_MAX_LENGTH,
-        required=True
+        required=True,
+        source='password',
+        write_only=True
     )
+
+    def get_token(self, validated_data):
+        user = self.get_user(validated_data.get('username'))
+        token = RefreshToken.for_user(user)
+        return token
+
+    def get_user(self, username):
+        return get_object_or_404(ProjectUser, username=username)
+
+    def validate(self, data):
+        username = data.get('username')
+        if data.get('password') != self.get_user(username).password:
+            raise serializers.ValidationError('Не верный код подтверждения')
+        return super().validate(data)
+
+    def to_representation(self, value):
+        return {
+            'token': self.get_token(value).get('access')
+        }
 
 
 class ReviewSerializer(serializers.ModelSerializer):

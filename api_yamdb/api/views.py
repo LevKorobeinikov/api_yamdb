@@ -1,6 +1,3 @@
-from django.contrib.auth.tokens import default_token_generator
-from django.core.mail import send_mail
-from django.db import IntegrityError
 from django.db.models import Avg
 from django.shortcuts import get_object_or_404
 
@@ -8,7 +5,6 @@ from rest_framework import filters, mixins, permissions, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework_simplejwt.tokens import RefreshToken
 
 from users.models import ProjectUser
 from reviews.models import Category, Genre, Title, Review
@@ -21,7 +17,7 @@ from api.serializers import (
     TitleSerializer, TitlePostSerializer,
     CommentSerializer, ReviewSerializer,
     UserSerializer, UserCreateSerializer,
-    UserTokenSerializer, UsersMeSerializer
+    UserTokenSerializer
 )
 
 
@@ -54,12 +50,12 @@ class UserViewSet(viewsets.ModelViewSet):
     )
     def get_me_data(self, request):
         user = get_object_or_404(ProjectUser, username=self.request.user)
-        serializer = UsersMeSerializer(user)
+        serializer = UserSerializer(user)
         if request.method == 'PATCH':
-            serializer = UsersMeSerializer(
+            serializer = UserSerializer(
                 user, data=request.data, partial=True)
             serializer.is_valid(raise_exception=True)
-            serializer.save()
+            serializer.save(role=request.user.role)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
@@ -71,42 +67,19 @@ class UserCreateViewSet(APIView):
     def post(self, request):
         serializer = UserCreateSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        try:
-            username = serializer.validated_data.get('username')
-            email = serializer.validated_data.get('email')
-            user, _ = ProjectUser.objects.get_or_create(
-                username=username,
-                email=email
-            )
-        except IntegrityError:
-            return Response('Имя/email  занято',
-                            status.HTTP_400_BAD_REQUEST)
-        confirmation_code = default_token_generator.make_token(user)
-        send_mail(
-            subject='Код подтверждения',
-            message=f'Код подтверждения: {confirmation_code}',
-            from_email='yamdb@yamdb.com',
-            recipient_list=(email,),
-            fail_silently=True,
-        )
+        serializer.save()
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class UserTokenViewSet(APIView):
     """Вьюсет для токена."""
 
+    permission_classes = (permissions.AllowAny,)
+
     def post(self, request):
         serializer = UserTokenSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        username = serializer.validated_data.get('username')
-        confirmation_code = serializer.validated_data.get('confirmation_code')
-        user = get_object_or_404(ProjectUser, username=username)
-        if not default_token_generator.check_token(user, confirmation_code):
-            message = {'confirmation_code': 'Код подтверждения неверный'}
-            return Response(message, status=status.HTTP_400_BAD_REQUEST)
-        token = RefreshToken.for_user(user)
-        return Response({'token': str(token.access_token)},
-                        status=status.HTTP_200_OK)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class CategoryViewSet(AdministratorViewSet):
