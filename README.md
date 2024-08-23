@@ -71,10 +71,12 @@ python manage.py runserver
 /api/v1/auth/signup/
 ```
 Пример запроса:
+```
 {
   "email": "user@example.com"
   "username": "^w\\Z"
 }
+```
 Пример ответа:
 {
   "email": "string",
