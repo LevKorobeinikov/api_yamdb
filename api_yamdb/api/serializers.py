@@ -49,32 +49,35 @@ class UserCreateSerializer(serializers.Serializer):
     def validate_username(self, value):
         if value == NO_USERNAMES:
             raise serializers.ValidationError(
-                f'Использовать имя {value} в качестве username запрещено'
+                'Использовать имя {value} в качестве username запрещено'
             )
         return value
 
-    def create(self, validated_data):
-        username = validated_data['username']
-        email = validated_data['email']
-        try:
-            user, _ = ProjectUser.objects.get_or_create(
-                username=username,
-                email=email
+    def validate(self, data):
+        username = data.get('username')
+        email = data.get('email')
+        if (ProjectUser.objects.filter(username=username).exists()
+                and not ProjectUser.objects.filter(email=email).exists()):
+            raise serializers.ValidationError(
+                f'Пользователь со значением username = {username}'
+                'уже существует'
             )
-        except IntegrityError:
-            if (ProjectUser.objects.filter(username=username).exists()
-                    and not ProjectUser.objects.filter(email=email).exists()):
-                raise serializers.ValidationError(
-                    f'Пользователь со значением username = {username}'
-                    'уже существует'
-                )
-            if (ProjectUser.objects.filter(email=email).exists()
-                    and not ProjectUser.objects.filter(username=username)
-                    .exists()):
-                raise serializers.ValidationError(
-                    f'Пользователь со значением email = {email}'
-                    'уже существует'
-                )
+        if (ProjectUser.objects.filter(email=email).exists()
+                and not ProjectUser.objects.filter(username=username)
+                .exists()):
+            raise serializers.ValidationError(
+                f'Пользователь со значением email = {email}'
+                'уже существует'
+            )
+        return super().validate(data)
+
+    def create(self, validated_data):
+        username = validated_data.get('username')
+        email = validated_data.get('email')
+        user, _ = ProjectUser.objects.get_or_create(
+            username=username,
+            email=email
+        )
         confirmation_code = default_token_generator.make_token(user)
         send_mail(
             subject='Код подтверждения',
@@ -96,28 +99,15 @@ class UserTokenSerializer(serializers.Serializer):
     confirmation_code = serializers.CharField(
         max_length=COD_MAX_LENGTH,
         required=True,
-        source='password',
-        write_only=True
     )
-
-    def get_token(self, validated_data):
-        user = self.get_user(validated_data.get('username'))
-        token = RefreshToken.for_user(user)
-        return token
-
-    def get_user(self, username):
-        return get_object_or_404(ProjectUser, username=username)
 
     def validate(self, data):
         username = data.get('username')
-        if data.get('password') != self.get_user(username).password:
-            raise serializers.ValidationError('Не верный код подтверждения')
+        confirmation_code = data.get('confirmation_code')
+        user = get_object_or_404(ProjectUser, username=username)
+        if not default_token_generator.check_token(user, confirmation_code):
+            raise serializers.ValidationError('Неверный код подтверждения')
         return super().validate(data)
-
-    def to_representation(self, value):
-        return {
-            'token': self.get_token(value).get('access')
-        }
 
 
 class ReviewSerializer(serializers.ModelSerializer):
