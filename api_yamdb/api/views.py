@@ -1,6 +1,5 @@
 from django.db.models import Avg
 from django.shortcuts import get_object_or_404
-
 from rest_framework import filters, mixins, permissions, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response

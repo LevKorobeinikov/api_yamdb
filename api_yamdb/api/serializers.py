@@ -49,7 +49,7 @@ class UserCreateSerializer(serializers.Serializer):
     def validate_username(self, value):
         if value == NO_USERNAMES:
             raise serializers.ValidationError(
-                'Использовать имя {value} в качестве username запрещено'
+                f'Использовать имя {value} в качестве username запрещено'
             )
         return value
 
