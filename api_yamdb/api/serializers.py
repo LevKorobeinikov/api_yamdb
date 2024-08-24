@@ -184,7 +184,7 @@ class TitleSerializer(serializers.ModelSerializer):
 
     genre = GenreSerializer(many=True)
     category = CategorySerializer()
-    rating = serializers.IntegerField(default=1, read_only=True)
+    rating = serializers.IntegerField(default=0, read_only=True)
 
     class Meta:
         model = Title
