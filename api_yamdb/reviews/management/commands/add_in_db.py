@@ -16,12 +16,13 @@ MAPPING_DATA = {
     Review: 'review.csv',
     Comment: 'comments.csv'
 }
+STATIC_DATA_PATH = Path(settings.BASE_DIR) / 'static/data/'
 
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
         for model, data in MAPPING_DATA.items():
-            csv_path = Path(settings.BASE_DIR) / 'static/data/' / data
+            csv_path = STATIC_DATA_PATH / data
             with open(csv_path, 'r', encoding='utf-8') as csvfile:
                 reader = DictReader(csvfile)
                 for row in reader:

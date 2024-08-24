@@ -1,7 +1,7 @@
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 
-from api_yamdb.constants import LIMIT_NAME_TEXT, MIN_VALUE, MAX_SCOPE_VALUE
+from api_yamdb.constants import LIMIT_NAME_TEXT, MAX_SCOPE_VALUE, MIN_VALUE
 from users.models import ProjectUser
 from reviews.utilites import current_year
 
@@ -48,19 +48,25 @@ class Genre(AbstractModelCategoryGenre):
 
 class Title(models.Model):
     name = models.CharField(
-        'Название произведения', max_length=LIMIT_NAME_TEXT)
+        'Название произведения',
+        max_length=LIMIT_NAME_TEXT
+    )
     year = models.SmallIntegerField(
         'Год выпуска',
         db_index=True,
-        validators=[MinValueValidator(
-                    limit_value=MIN_VALUE,
-                    message='Нулевой год ставить недопустимо'),
-                    MaxValueValidator(
-                    limit_value=current_year,
-                    message='А вы оказывается из будущего')])
-    description = models.TextField('Описание', blank=True)
+        validators=[
+            MaxValueValidator(
+                limit_value=current_year,
+                message='А вы оказывается из будущего')]
+    )
+    description = models.TextField(
+        'Описание',
+        blank=True
+    )
     genre = models.ManyToManyField(
-        Genre, through='GenreTitle',)
+        Genre,
+        through='GenreTitle',
+    )
     category = models.ForeignKey(
         Category,
         on_delete=models.SET_NULL,
@@ -102,15 +108,21 @@ class GenreTitle(models.Model):
 
 class Review(AbstractModelReviewComment):
     title = models.ForeignKey(
-        Title, on_delete=models.CASCADE, verbose_name='Произведение')
+        Title,
+        on_delete=models.CASCADE,
+        verbose_name='Произведение'
+    )
     score = models.PositiveSmallIntegerField(
-        'Оценка', db_index=True,
-        validators=[MinValueValidator(
-                    limit_value=MIN_VALUE,
-                    message=f'Минимальная оценка - {MIN_VALUE}'),
-                    MaxValueValidator(
-                    limit_value=MAX_SCOPE_VALUE,
-                    message=f'Максимальная оценка - {MAX_SCOPE_VALUE}')])
+        'Оценка',
+        db_index=True,
+        validators=[
+            MinValueValidator(
+                limit_value=MIN_VALUE,
+                message=f'Минимальная оценка - {MIN_VALUE}'),
+            MaxValueValidator(
+                limit_value=MAX_SCOPE_VALUE,
+                message=f'Максимальная оценка - {MAX_SCOPE_VALUE}')]
+    )
 
     class Meta(AbstractModelReviewComment.Meta):
         verbose_name = 'Отзыв'
