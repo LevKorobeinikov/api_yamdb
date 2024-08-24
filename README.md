@@ -7,6 +7,9 @@
 Пользователи могут оставлять комментарии к отзывам.
 Добавлять отзывы, комментарии и ставить оценки могут только аутентифицированные пользователи.
 
+# Используемые технологии:
+Python 3.9.13, Django 3.2.16, DjangoRestFramework 3.12.4, simpleJWT 4.7.2
+
 # Установка
 Клонировать репозиторий и перейти в него в командной строке:
 
@@ -42,6 +45,23 @@ pip install -r requirements.txt
 
 ```
 python manage.py migrate
+```
+
+В проекте находятся тестовые данные для заполнения Базы Данных /static/data. Для заполнения БД необходимо пеерйти в директорию с dbsqlite3 выполнить команду для подкоючения к ней:
+```
+sqlite3 db.sqlite3
+```
+Для загрузки тестовых данных выполните комманды:
+```
+.mode csv
+.separator ","
+.import static/data/category.csv reviews_category
+.import static/data/comments.csv reviews_comment
+.import static/data/genre_title.csv reviews_title_genre
+.import static/data/genre.csv reviews_genre
+.import static/data/review.csv reviews_review
+.import static/data/titles.csv reviews_title
+.import static/data/users.csv reviews_yamdbuser
 ```
 
 Запустить проект:
@@ -138,4 +158,3 @@ Python 3.9.13, Django 3.2.16, DjangoRestFramework 3.12.4, simpleJWT 4.7.2
 [Максим Журавлев](https://github.com/MaxMen00)
 
 [Наиль Мансуров](https://github.com/NailMansurov)
-
