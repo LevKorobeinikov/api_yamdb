@@ -4,11 +4,9 @@ from django.conf import settings
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
 from django.core.validators import MaxValueValidator, MinValueValidator
-from django.db.utils import IntegrityError
 from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 from rest_framework.relations import SlugRelatedField
-from rest_framework_simplejwt.tokens import RefreshToken
 
 from api_yamdb.constants import (
     CHECK_USERNAME, COD_MAX_LENGTH, EMAIL_MAX_LENGTH,
