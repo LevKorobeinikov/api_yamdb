@@ -52,12 +52,6 @@ python manage.py migrate
 python manage.py add_in_db
 ```
 
-Выполнить миграции:
-
-```
-python manage.py migrate
-```
-
 Запустить проект:
 
 ```
