@@ -5,18 +5,16 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from reviews.models import Category, Genre, Review, Title
 from users.models import ProjectUser
-from reviews.models import Category, Genre, Title, Review
 from api.filters import TitleFilter
 from api.permissions import (
     IsAdmin, IsAdminOrReadOnly, IsAuthorOrAdminOrModeratorOrReadOnly
 )
 from api.serializers import (
-    CategorySerializer, GenreSerializer,
-    TitleSerializer, TitlePostSerializer,
-    CommentSerializer, ReviewSerializer,
-    UserSerializer, UserCreateSerializer,
-    UserTokenSerializer
+    CategorySerializer, CommentSerializer, GenreSerializer,
+    ReviewSerializer, TitlePostSerializer, TitleSerializer,
+    UserCreateSerializer, UserSerializer, UserTokenSerializer
 )
 
 

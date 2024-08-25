@@ -54,20 +54,19 @@ class UserCreateSerializer(serializers.Serializer):
     def validate(self, data):
         username = data.get('username')
         email = data.get('email')
-        if (ProjectUser.objects.filter(username=username).exists()
-                and not ProjectUser.objects.filter(email=email).exists()):
+        if ProjectUser.objects.filter(username=username, email=email).exists():
+            return data
+        if ProjectUser.objects.filter(username=username).exists():
             raise serializers.ValidationError(
                 f'Пользователь со значением username = {username}'
                 'уже существует'
             )
-        if (ProjectUser.objects.filter(email=email).exists()
-                and not ProjectUser.objects.filter(username=username)
-                .exists()):
+        if ProjectUser.objects.filter(email=email).exists():
             raise serializers.ValidationError(
                 f'Пользователь со значением email = {email}'
                 'уже существует'
             )
-        return super().validate(data)
+        return data
 
     def create(self, validated_data):
         username = validated_data.get('username')
@@ -119,7 +118,9 @@ class ReviewSerializer(serializers.ModelSerializer):
                 message=f'Минимальная оценка - {MIN_VALUE}'),
             MaxValueValidator(
                 limit_value=MAX_SCOPE_VALUE,
-                message=f'Максимальная оценка - {MAX_SCOPE_VALUE}')]
+                message=f'Максимальная оценка - {MAX_SCOPE_VALUE}'
+            )
+        ]
     )
 
     class Meta:
@@ -205,7 +206,7 @@ class TitlePostSerializer(serializers.ModelSerializer):
                   'description', 'genre', 'category')
 
     def validate_year(self, value):
-        if (value > dt.date.today().year):
+        if value > dt.date.today().year:
             raise serializers.ValidationError(
                 'А вы оказывается из будущего'
             )

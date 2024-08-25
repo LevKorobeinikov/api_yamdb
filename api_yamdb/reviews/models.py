@@ -23,7 +23,8 @@ class AbstractModelReviewComment(models.Model):
     text = models.TextField('Текст отзыва')
     author = models.ForeignKey(
         ProjectUser, on_delete=models.CASCADE,
-        verbose_name='Aвтор')
+        verbose_name='Aвтор'
+    )
     pub_date = models.DateTimeField('Дата публикации', auto_now_add=True)
 
     class Meta:
@@ -57,7 +58,9 @@ class Title(models.Model):
         validators=[
             MaxValueValidator(
                 limit_value=current_year,
-                message='А вы оказывается из будущего')]
+                message='А вы оказывается из будущего'
+            )
+        ]
     )
     description = models.TextField(
         'Описание',
@@ -118,10 +121,13 @@ class Review(AbstractModelReviewComment):
         validators=[
             MinValueValidator(
                 limit_value=MIN_VALUE,
-                message=f'Минимальная оценка - {MIN_VALUE}'),
+                message=f'Минимальная оценка - {MIN_VALUE}'
+            ),
             MaxValueValidator(
                 limit_value=MAX_SCOPE_VALUE,
-                message=f'Максимальная оценка - {MAX_SCOPE_VALUE}')]
+                message=f'Максимальная оценка - {MAX_SCOPE_VALUE}'
+            )
+        ]
     )
 
     class Meta(AbstractModelReviewComment.Meta):
