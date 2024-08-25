@@ -137,9 +137,6 @@ python manage.py runserver
 ```
 
 
-# Используемые технологии:
-Python 3.9.13, Django 3.2.16, DjangoRestFramework 3.12.4, simpleJWT 4.7.2
-
 # Авторы
 [Лев Коробейников](https://github.com/LevKorobeinikov)
 
